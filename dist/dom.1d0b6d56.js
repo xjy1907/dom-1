@@ -124,8 +124,23 @@ window.dom = {
     //const divList = dom.find('.red') // 获取多个 div.red 元素
     return (scope || document).querySelectorAll(selector);
   },
-  style: function style(node, key, value) {
-    node.style[key] = value;
+  style: function style(node, name, value) {
+    if (arguments.length === 3) {
+      // dom.style(div, 'color', 'red')
+      node.style[name] = value;
+    } else if (arguments.length === 2) {
+      if (typeof name === "string") {
+        // dom.style(div, 'color')
+        return node.style[name];
+      } else if (name instanceof Object) {
+        // dom.style(div, {color: 'red'})
+        var object = name;
+
+        for (var key in object) {
+          node.style[key] = object[key];
+        }
+      }
+    }
   },
   each: function each(nodeList, fn) {
     //dom.each(divList, (n)=> console.log(n)) // 遍历 divList 里的所有元素
@@ -162,7 +177,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5530" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5424" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
